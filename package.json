@@ -1,0 +1,65 @@
+{
+  "name": "flum-iptv",
+  "version": "1.0.0",
+  "description": "Reproductor IPTV modular con soporte HLS y DASH",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win"
+  },
+  "keywords": [
+    "iptv",
+    "hls",
+    "dash",
+    "electron",
+    "streaming"
+  ],
+  "author": "Naruh1010",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "hls.js": "^1.5.0",
+    "dashjs": "^4.7.0"
+  },
+  "build": {
+    "appId": "com.flum.iptv",
+    "productName": "Flum IPTV",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    }
+  }
+}

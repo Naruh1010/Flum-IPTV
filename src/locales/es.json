@@ -1,0 +1,155 @@
+{
+    "app": {
+        "name": "Flum IPTV",
+        "loading": "Cargando...",
+        "refresh": "Actualizar",
+        "calculating": "Calculando..."
+    },
+    "toast": {
+        "recordingStarted": "Grabación iniciada",
+        "recordingSaved": "Grabación guardada ({duration}s)",
+        "recordingError": "Error de grabación: {message}",
+        "playlistRefreshed": "Playlist actualizada",
+        "playlistDeleted": "Playlist eliminada",
+        "settingsReset": "Configuración restaurada",
+        "cacheCleaned": "Caché limpiado",
+        "playingInExternalPlayer": "Reproduciendo en {name}",
+        "externalPlayerError": "Error: {error}",
+        "externalPlayerOpenError": "Error al abrir reproductor externo"
+    },
+    "library": {
+        "title": "Mis Playlists",
+        "search": "Buscar playlists...",
+        "newPlaylist": "Nueva Playlist",
+        "defaultPlaylistName": "Playlist URL",
+        "empty": {
+            "title": "No hay playlists",
+            "description": "Agrega tu primera playlist para comenzar",
+            "button": "Agregar Playlist"
+        },
+        "card": {
+            "channels": "canales",
+            "added": "Añadido",
+            "updated": "Actualizado",
+            "refresh": "Refrescar",
+            "edit": "Editar",
+            "delete": "Eliminar"
+        }
+    },
+    "player": {
+        "allGroups": "Todos los grupos",
+        "searchChannels": "Buscar canales...",
+        "noChannels": "No hay canales",
+        "loadPlaylist": "Carga una playlist para ver los canales",
+        "controls": {
+            "play": "Reproducir",
+            "pause": "Pausar",
+            "playPause": "Reproducir/Pausar",
+            "previous": "Canal anterior",
+            "next": "Canal siguiente",
+            "mute": "Silenciar",
+            "unmute": "Activar sonido",
+            "fullscreen": "Pantalla completa",
+            "exitFullscreen": "Salir de pantalla completa",
+            "record": "Grabar",
+            "stopRecording": "Detener grabación"
+        },
+        "errors": {
+            "loadFailed": "No se pudo reproducir",
+            "networkError": "Error de red. Verifica tu conexión a internet.",
+            "channelUnavailable": "El canal no está disponible",
+            "retry": "Reintentar",
+            "unknown": "Error desconocido",
+            "serverOffline": "No se pudo conectar al servidor del canal. Puede estar offline.",
+            "formatNotSupported": "El formato del stream no es compatible.",
+            "timeout": "El canal tardó demasiado en responder."
+        },
+        "externalPlayer": {
+            "playing": "El canal se está reproduciendo en una ventana externa"
+        }
+    },
+    "settings": {
+        "title": "Configuración",
+        "appearance": {
+            "title": "APARIENCIA",
+            "theme": "Tema",
+            "themeDescription": "Modo claro u oscuro de la interfaz",
+            "themeSystem": "Automático (Sistema)",
+            "themeDark": "Oscuro",
+            "themeLight": "Claro",
+            "accentColor": "Color de acento",
+            "accentColorDescription": "Usar el color del sistema operativo",
+            "customColor": "Color personalizado",
+            "customColorDescription": "Seleccionar color manualmente",
+            "language": "Idioma",
+            "languageDescription": "Idioma de la interfaz",
+            "system": "Automático (Sistema)"
+        },
+        "data": {
+            "title": "DATOS Y CACHÉ",
+            "cacheSize": "Espacio usado",
+            "openFolder": "Abrir carpeta de datos",
+            "openFolderDescription": "Abre .FlumIPTVData en el explorador",
+            "clearCache": "Borrar caché de iconos",
+            "clearCacheDescription": "Elimina todos los iconos descargados"
+        },
+        "externalPlayer": {
+            "title": "REPRODUCTOR EXTERNO",
+            "enable": "Usar reproductor externo",
+            "enableDescription": "Abrir streams en MPV, VLC u otro reproductor",
+            "path": "Ruta del reproductor",
+            "select": "Seleccionar",
+            "detected": "Detectado automáticamente",
+            "detectedName": "{name} encontrado",
+            "use": "Usar",
+            "notConfigured": "No configurado"
+        },
+        "recording": {
+            "title": "GRABACIÓN",
+            "preset": "Calidad de grabación",
+            "presetDescription": "Preajuste de calidad para grabaciones",
+            "presetLow": "Bajo (500 kbps)",
+            "presetMedium": "Medio (1.5 Mbps)",
+            "presetHigh": "Alto (3 Mbps)",
+            "outputFormat": "Formato de salida",
+            "format": "WebM (VP8 + Opus)"
+        },
+        "reset": {
+            "title": "RESTAURAR",
+            "restore": "Restaurar configuración",
+            "restoreDescription": "Volver a los valores por defecto"
+        }
+    },
+    "modal": {
+        "addPlaylist": {
+            "title": "Agregar Playlist",
+            "tabFile": "Archivo",
+            "tabUrl": "URL",
+            "selectFile": "Seleccionar archivo",
+            "urlPlaceholder": "https://ejemplo.com/playlist.m3u",
+            "namePlaceholder": "Nombre de la playlist (opcional)",
+            "cancel": "Cancelar",
+            "add": "Agregar"
+        },
+        "editPlaylist": {
+            "title": "Editar Playlist",
+            "name": "Nombre",
+            "url": "URL",
+            "cancel": "Cancelar",
+            "save": "Guardar"
+        },
+        "confirm": {
+            "delete": "¿Eliminar \"{name}\"?",
+            "clearCache": "¿Eliminar todos los iconos del caché?",
+            "resetSettings": "⚠️ ATENCIÓN ⚠️\n\nEsto borrará TODOS los datos:\n- Playlists guardadas\n- Configuración\n- Caché de iconos\n\nLa aplicación se reiniciará.\n\n¿Continuar?"
+        }
+    },
+    "common": {
+        "back": "Volver",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "close": "Cerrar"
+    }
+}

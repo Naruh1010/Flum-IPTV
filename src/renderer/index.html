@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.dashjs.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: file:; media-src * blob:; connect-src *; worker-src blob:;">
+  <title>Flum IPTV</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <!-- Title Bar -->
+  <header class="titlebar" id="titlebar">
+    <div class="titlebar-drag">
+      <span class="app-title">Flum IPTV</span>
+    </div>
+  </header>
+
+  <!-- ========== LIBRARY VIEW ========== -->
+  <main class="view library-view active" id="library-view">
+    <div class="library-header">
+      <h1 class="library-title" data-i18n="library.title">Mis Playlists</h1>
+      <div class="library-actions">
+        <button class="btn btn-primary" id="btn-add-playlist">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          <span data-i18n="library.newPlaylist">Nueva Playlist</span>
+        </button>
+        <button class="btn btn-icon" id="btn-settings" title="Configuración">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="library-search">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input type="text" class="search-input" id="library-search" data-i18n="library.search"
+        placeholder="Buscar playlists...">
+    </div>
+
+    <div class="playlist-grid" id="playlist-grid">
+      <!-- Playlist cards will be inserted here -->
+      <div class="empty-library" id="empty-library">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+          <polyline points="17 21 17 13 7 13 7 21" />
+          <polyline points="7 3 7 8 15 8" />
+        </svg>
+        <p data-i18n="library.empty.title">No hay playlists guardadas</p>
+        <span data-i18n="library.empty.description">Haz clic en "Nueva Playlist" para añadir una</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== PLAYER VIEW ========== -->
+  <main class="view player-view" id="player-view">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button class="btn btn-icon" id="btn-back-library" title="Volver a biblioteca">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <span class="playlist-name-header" id="playlist-name-header">Playlist</span>
+      </div>
+
+      <div class="search-container">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" class="search-input" id="search-input" data-i18n="player.searchChannels"
+          placeholder="Buscar canales...">
+      </div>
+
+      <div class="group-filter">
+        <select id="group-select" class="group-select">
+          <option value="all" data-i18n="player.allGroups">Todos los grupos</option>
+        </select>
+      </div>
+
+      <div class="channel-list" id="channel-list">
+        <div class="empty-state" id="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <polyline points="17 2 12 7 7 2" />
+          </svg>
+          <p data-i18n="player.loadPlaylist">Carga una playlist M3U para empezar</p>
+        </div>
+      </div>
+    </aside>
+
+    <section class="player-section" id="player-section">
+      <div class="video-container" id="video-container">
+        <video id="video-player" playsinline></video>
+
+        <div class="loading-overlay" id="loading-overlay">
+          <div class="spinner"></div>
+          <span data-i18n="app.loading">Cargando...</span>
+        </div>
+
+        <!-- Error Overlay -->
+        <div class="error-overlay hidden" id="error-overlay">
+          <div class="error-content">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <h3 class="error-title" data-i18n="player.errors.loadFailed">No se pudo reproducir</h3>
+            <p class="error-message" id="error-message" data-i18n="player.errors.channelUnavailable">El canal no está
+              disponible</p>
+            <button class="btn btn-primary" id="btn-retry" data-i18n="player.errors.retry">Reintentar</button>
+          </div>
+        </div>
+
+        <!-- External Player Placeholder -->
+        <div class="external-player-overlay hidden" id="external-player-overlay">
+          <div class="external-player-content">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+              opacity="0.6">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+              <polygon points="9.5 8 9.5 12 13 10 9.5 8" fill="currentColor" />
+            </svg>
+            <p class="external-player-text" id="external-player-text" data-i18n="player.externalPlayer.playing">
+              El canal se está reproduciendo en una ventana externa
+            </p>
+            <span class="external-player-name" id="external-player-name-display">MPV Player</span>
+          </div>
+        </div>
+
+        <div class="player-controls" id="player-controls">
+          <div class="controls-left">
+            <button class="control-btn" id="btn-play" data-i18n-title="player.controls.playPause" title="Reproducir/Pausar">
+              <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <svg class="icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" />
+                <rect x="14" y="4" width="4" height="16" />
+              </svg>
+            </button>
+            <button class="control-btn" id="btn-prev" data-i18n-title="player.controls.previous" title="Canal anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="19 20 9 12 19 4 19 20" />
+                <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </button>
+            <button class="control-btn" id="btn-next" data-i18n-title="player.controls.next" title="Canal siguiente">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 4 15 12 5 20 5 4" />
+                <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </button>
+            <div class="volume-control">
+              <button class="control-btn" id="btn-mute" data-i18n-title="player.controls.mute" title="Silenciar">
+                <svg class="icon-volume" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <svg class="icon-muted hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </svg>
+              </button>
+              <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.1" value="1">
+            </div>
+          </div>
+          <div class="controls-center">
+            <div class="channel-info-display">
+              <span class="channel-name" id="current-channel-name">Flum IPTV</span>
+              <span class="channel-group" id="current-channel-group"></span>
+            </div>
+          </div>
+          <div class="controls-right">
+            <button class="control-btn" id="btn-record" data-i18n-title="player.controls.record" title="Grabar" disabled>
+              <svg class="icon-record" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="8" />
+              </svg>
+              <svg class="icon-recording hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12" rx="2" />
+              </svg>
+            </button>
+            <button class="control-btn" id="btn-fullscreen" data-i18n-title="player.controls.fullscreen" title="Pantalla completa">
+              <svg class="icon-fullscreen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <polyline points="15 3 21 3 21 9" />
+                <polyline points="9 21 3 21 3 15" />
+                <line x1="21" y1="3" x2="14" y2="10" />
+                <line x1="3" y1="21" x2="10" y2="14" />
+              </svg>
+              <svg class="icon-exit-fullscreen hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="4 14 10 14 10 20" />
+                <polyline points="20 10 14 10 14 4" />
+                <line x1="14" y1="10" x2="21" y2="3" />
+                <line x1="3" y1="21" x2="10" y2="14" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== SETTINGS VIEW ========== -->
+  <main class="view settings-view" id="settings-view">
+    <div class="settings-header">
+      <button class="btn btn-icon" id="btn-back-from-settings" title="Volver">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <h1 class="settings-title" data-i18n="settings.title">Configuración</h1>
+    </div>
+
+    <div class="settings-content">
+      <!-- Appearance Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.appearance.title">Apariencia</h2>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.appearance.theme">Tema</span>
+            <span class="setting-description" data-i18n="settings.appearance.themeDescription">Modo claro u oscuro de la
+              interfaz</span>
+          </div>
+          <select class="setting-select" id="setting-theme">
+            <option value="system" data-i18n="settings.appearance.themeSystem">Automático (Sistema)</option>
+            <option value="dark" data-i18n="settings.appearance.themeDark">Oscuro</option>
+            <option value="light" data-i18n="settings.appearance.themeLight">Claro</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.appearance.accentColor">Color de acento</span>
+            <span class="setting-description" data-i18n="settings.appearance.accentColorDescription">Usar el color del
+              sistema operativo</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="setting-use-os-color" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item" id="custom-color-container">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.appearance.customColor">Color personalizado</span>
+            <span class="setting-description" data-i18n="settings.appearance.customColorDescription">Seleccionar color
+              manualmente</span>
+          </div>
+          <input type="color" class="color-picker" id="setting-custom-color" value="#6366f1">
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.appearance.language">Idioma</span>
+            <span class="setting-description" data-i18n="settings.appearance.languageDescription">Idioma de la
+              interfaz</span>
+          </div>
+          <select class="setting-select" id="setting-language">
+            <option value="system" data-i18n="settings.appearance.system">Automático (Sistema)</option>
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Data Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.data.title">Datos y Caché</h2>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.data.cacheSize">Espacio usado</span>
+            <span class="setting-description" id="cache-size-info">Calculando...</span>
+          </div>
+        </div>
+
+        <div class="setting-item clickable" id="btn-open-data-folder">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.data.openFolder">Abrir carpeta de datos</span>
+            <span class="setting-description" data-i18n="settings.data.openFolderDescription">Abre .FlumIPTVData en el
+              explorador</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </div>
+
+        <div class="setting-item clickable" id="btn-clear-cache">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.data.clearCache">Borrar caché de iconos</span>
+            <span class="setting-description" data-i18n="settings.data.clearCacheDescription">Elimina todos los iconos
+              descargados</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+        </div>
+      </section>
+
+      <!-- External Player Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.externalPlayer.title">Reproductor Externo</h2>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.externalPlayer.enable">Usar reproductor externo</span>
+            <span class="setting-description" data-i18n="settings.externalPlayer.enableDescription">Abrir streams en
+              MPV, VLC u otro reproductor</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="setting-use-external-player">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item" id="external-player-path-container">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.externalPlayer.path">Ruta del reproductor</span>
+            <span class="setting-description" id="external-player-path"
+              data-i18n="settings.externalPlayer.notConfigured">No configurado</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-select-player">
+            <span data-i18n="settings.externalPlayer.select">Seleccionar</span>
+          </button>
+        </div>
+
+        <div class="setting-item" id="external-player-detected" style="display: none;">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.externalPlayer.detected">Detectado automáticamente</span>
+            <span class="setting-description" id="detected-player-name">-</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-use-detected">
+            <span data-i18n="settings.externalPlayer.use">Usar</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Recording Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.recording.title">Grabación</h2>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.recording.preset">Calidad de grabación</span>
+            <span class="setting-description" data-i18n="settings.recording.presetDescription">Afecta el tamaño del
+              archivo y uso de CPU</span>
+          </div>
+          <select id="setting-recording-preset" class="setting-select">
+            <option value="low" data-i18n="settings.recording.presetLow">Bajo (500 kbps)</option>
+            <option value="medium" selected data-i18n="settings.recording.presetMedium">Medio (1.5 Mbps)</option>
+            <option value="high" data-i18n="settings.recording.presetHigh">Alto (3 Mbps)</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.recording.outputFormat">Formato de salida</span>
+            <span class="setting-description" data-i18n="settings.recording.format">WebM (VP8 + Opus)</span>
+          </div>
+          <span class="setting-value">30 fps máx.</span>
+        </div>
+      </section>
+
+      <!-- Reset Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.reset.title">Restaurar</h2>
+
+        <div class="setting-item clickable danger" id="btn-reset-settings">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.reset.restore">Restaurar configuración</span>
+            <span class="setting-description" data-i18n="settings.reset.restoreDescription">Volver a los valores por
+              defecto</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+          </svg>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========== MODALS ========== -->
+
+  <!-- Add Playlist Modal -->
+  <div class="modal hidden" id="add-playlist-modal">
+    <div class="modal-content">
+      <h3 data-i18n="modal.addPlaylist.title">Añadir Playlist</h3>
+      <div class="modal-tabs">
+        <button class="tab active" data-tab="file" data-i18n="modal.addPlaylist.tabFile">Archivo</button>
+        <button class="tab" data-tab="url" data-i18n="modal.addPlaylist.tabUrl">URL</button>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content active" id="tab-file">
+          <button class="btn btn-secondary btn-full" id="btn-select-file">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+              <polyline points="13 2 13 9 20 9" />
+            </svg>
+            <span data-i18n="modal.addPlaylist.selectFile">Seleccionar archivo M3U</span>
+          </button>
+          <span class="selected-file" id="selected-file-name"></span>
+        </div>
+        <div class="tab-content" id="tab-url">
+          <input type="url" class="modal-input" id="playlist-url-input" placeholder="https://example.com/playlist.m3u">
+        </div>
+      </div>
+      <input type="text" class="modal-input" id="playlist-name-input" data-i18n="modal.addPlaylist.namePlaceholder"
+        placeholder="Nombre de la playlist (opcional)">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-add" data-i18n="common.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-add" data-i18n="modal.addPlaylist.add">Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Playlist Modal -->
+  <div class="modal hidden" id="edit-playlist-modal">
+    <div class="modal-content">
+      <h3 data-i18n="modal.editPlaylist.title">Editar Playlist</h3>
+      <input type="text" class="modal-input" id="edit-playlist-name" data-i18n="modal.editPlaylist.name"
+        placeholder="Nombre">
+      <input type="url" class="modal-input" id="edit-playlist-url" placeholder="URL (si aplica)">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-edit" data-i18n="common.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-edit" data-i18n="common.save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  <script type="module" src="renderer.js"></script>
+</body>
+
+</html>

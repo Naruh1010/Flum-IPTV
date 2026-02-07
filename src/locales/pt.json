@@ -1,0 +1,155 @@
+{
+    "app": {
+        "name": "Flum IPTV",
+        "loading": "Carregando...",
+        "refresh": "Atualizar",
+        "calculating": "Calculando..."
+    },
+    "toast": {
+        "recordingStarted": "Gravação iniciada",
+        "recordingSaved": "Gravação salva ({duration}s)",
+        "recordingError": "Erro de gravação: {message}",
+        "playlistRefreshed": "Playlist atualizada",
+        "playlistDeleted": "Playlist excluída",
+        "settingsReset": "Configurações restauradas",
+        "cacheCleaned": "Cache limpo",
+        "playingInExternalPlayer": "Reproduzindo em {name}",
+        "externalPlayerError": "Erro: {error}",
+        "externalPlayerOpenError": "Erro ao abrir reprodutor externo"
+    },
+    "library": {
+        "title": "Minhas Playlists",
+        "search": "Buscar playlists...",
+        "newPlaylist": "Nova Playlist",
+        "defaultPlaylistName": "Playlist URL",
+        "empty": {
+            "title": "Sem playlists",
+            "description": "Adicione sua primeira playlist para começar",
+            "button": "Adicionar Playlist"
+        },
+        "card": {
+            "channels": "canais",
+            "added": "Adicionado",
+            "updated": "Atualizado",
+            "refresh": "Atualizar",
+            "edit": "Editar",
+            "delete": "Excluir"
+        }
+    },
+    "player": {
+        "allGroups": "Todos os grupos",
+        "searchChannels": "Buscar canais...",
+        "noChannels": "Sem canais",
+        "loadPlaylist": "Carregue uma playlist para ver os canais",
+        "controls": {
+            "play": "Reproduzir",
+            "pause": "Pausar",
+            "playPause": "Reproduzir/Pausar",
+            "previous": "Canal anterior",
+            "next": "Próximo canal",
+            "mute": "Silenciar",
+            "unmute": "Ativar som",
+            "fullscreen": "Tela cheia",
+            "exitFullscreen": "Sair da tela cheia",
+            "record": "Gravar",
+            "stopRecording": "Parar gravação"
+        },
+        "errors": {
+            "loadFailed": "Não foi possível reproduzir",
+            "networkError": "Erro de rede. Verifique sua conexão com a internet.",
+            "channelUnavailable": "O canal não está disponível",
+            "retry": "Tentar novamente",
+            "unknown": "Erro desconhecido",
+            "serverOffline": "Não foi possível conectar ao servidor do canal. Pode estar offline.",
+            "formatNotSupported": "O formato do stream não é suportado.",
+            "timeout": "O canal demorou muito para responder."
+        },
+        "externalPlayer": {
+            "playing": "O canal está sendo reproduzido em uma janela externa"
+        }
+    },
+    "settings": {
+        "title": "Configurações",
+        "appearance": {
+            "title": "APARÊNCIA",
+            "theme": "Tema",
+            "themeDescription": "Modo claro ou escuro da interface",
+            "themeSystem": "Automático (Sistema)",
+            "themeDark": "Escuro",
+            "themeLight": "Claro",
+            "accentColor": "Cor de destaque",
+            "accentColorDescription": "Usar a cor do sistema operacional",
+            "customColor": "Cor personalizada",
+            "customColorDescription": "Selecionar cor manualmente",
+            "language": "Idioma",
+            "languageDescription": "Idioma da interface",
+            "system": "Automático (Sistema)"
+        },
+        "data": {
+            "title": "DADOS E CACHE",
+            "cacheSize": "Espaço usado",
+            "openFolder": "Abrir pasta de dados",
+            "openFolderDescription": "Abre .FlumIPTVData no explorador",
+            "clearCache": "Limpar cache de ícones",
+            "clearCacheDescription": "Exclui todos os ícones baixados"
+        },
+        "externalPlayer": {
+            "title": "REPRODUTOR EXTERNO",
+            "enable": "Usar reprodutor externo",
+            "enableDescription": "Abrir streams no MPV, VLC ou outro reprodutor",
+            "path": "Caminho do reprodutor",
+            "select": "Selecionar",
+            "detected": "Detectado automaticamente",
+            "detectedName": "{name} encontrado",
+            "use": "Usar",
+            "notConfigured": "Não configurado"
+        },
+        "recording": {
+            "title": "GRAVAÇÃO",
+            "preset": "Qualidade de gravação",
+            "presetDescription": "Predefinição de qualidade para gravações",
+            "presetLow": "Baixo (500 kbps)",
+            "presetMedium": "Médio (1.5 Mbps)",
+            "presetHigh": "Alto (3 Mbps)",
+            "outputFormat": "Formato de saída",
+            "format": "WebM (VP8 + Opus)"
+        },
+        "reset": {
+            "title": "REDEFINIR",
+            "restore": "Redefinir configurações",
+            "restoreDescription": "Voltar aos valores padrão"
+        }
+    },
+    "modal": {
+        "addPlaylist": {
+            "title": "Adicionar Playlist",
+            "tabFile": "Arquivo",
+            "tabUrl": "URL",
+            "selectFile": "Selecionar arquivo",
+            "urlPlaceholder": "https://exemplo.com/playlist.m3u",
+            "namePlaceholder": "Nome da playlist (opcional)",
+            "cancel": "Cancelar",
+            "add": "Adicionar"
+        },
+        "editPlaylist": {
+            "title": "Editar Playlist",
+            "name": "Nome",
+            "url": "URL",
+            "cancel": "Cancelar",
+            "save": "Salvar"
+        },
+        "confirm": {
+            "delete": "Excluir \"{name}\"?",
+            "clearCache": "Excluir todos os ícones do cache?",
+            "resetSettings": "⚠️ ATENÇÃO ⚠️\n\nIsso apagará TODOS os dados:\n- Playlists salvas\n- Configurações\n- Cache de ícones\n\nO app será reiniciado.\n\nContinuar?"
+        }
+    },
+    "common": {
+        "back": "Voltar",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "close": "Fechar"
+    }
+}
