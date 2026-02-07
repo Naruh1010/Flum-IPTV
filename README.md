@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%20|%20macOS%20|%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-**A modern cross-platform IPTV player with HLS and DASH support**
+**A modern cross-platform (coming soon) IPTV player with HLS and DASH support**
 
 [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Configuration](#️-configuration)
 
@@ -16,11 +16,11 @@
 
 ## 🎯 Description
 
-**Flum IPTV** is an elegant and powerful desktop application for playing IPTV playlists (M3U/M3U8). Designed with a modern and fluid interface, it allows you to manage multiple playlists, watch live channels, and record content directly from the application.
+**Flum IPTV** is an elegant and powerful desktop application for playing IPTV playlists (M3U/M3U8). Designed with a simple andmodern interface, it allows you to manage multiple playlists, watch live channels, and record content directly from the application.
 
 ### Why Flum IPTV?
 
-- 🎨 **Modern Interface** - Elegant dark theme with smooth animations
+- 🎨 **Modern Interface** - Modern Dark theme mode
 - ⚡ **Performance** - Built with HLS.js for maximum compatibility
 - 🌐 **Multi-language** - Support for Spanish, English, and Portuguese
 -  **Recording** - Record your favorite programs in WebM format
@@ -50,10 +50,9 @@
   - **Medium** - 1.5 Mbps (quality/size balance)
   - **High** - 3 Mbps (maximum quality)
 - 📁 Automatic saving to Downloads folder
-- ⏱️ Real-time duration indicator
 
 ### Customization
-- 🌙 Elegant dark theme
+- 🌙 Dark theme
 - 🎨 Customizable accent color or synced with system
 - 🌐 Multi-language support (ES/EN/PT)
 - 💾 Channel icon caching for fast loading
