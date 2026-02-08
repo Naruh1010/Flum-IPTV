@@ -1,13 +1,27 @@
 {
   "name": "flum-iptv",
   "version": "1.0.0",
-  "description": "Reproductor IPTV modular con soporte HLS y DASH",
+  "description": "IPTV Player with HLS and DASH support",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --enable-logging",
     "build": "electron-builder",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "build:win:nsis": "npx electron-builder --win nsis",
+    "build:win:portable": "npx electron-builder --win portable",
+    "build:win:msi": "npx electron-builder --win msi",
+    "build:win:appx": "npx electron-builder --win appx",
+    "build:win:squirrel": "npx electron-builder --win squirrel",
+    "build:win:zip": "npx electron-builder --win zip",
+    "build:linux": "electron-builder --linux",
+    "build:linux:deb": "npx electron-builder --linux deb",
+    "build:linux:rpm": "npx electron-builder --linux rpm",
+    "build:linux:appimage": "npx electron-builder --linux AppImage",
+    "build:linux:snap": "npx electron-builder --linux snap",
+    "build:linux:flatpak": "npx electron-builder --linux flatpak",
+    "build:linux:pacman": "npx electron-builder --linux pacman",
+    "build:linux:tar.gz": "npx electron-builder --linux tar.gz"
   },
   "keywords": [
     "iptv",
@@ -29,8 +43,10 @@
   "build": {
     "appId": "com.flum.iptv",
     "productName": "Flum IPTV",
+    "copyright": "Copyright © 2026 Naruh1010",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "build"
     },
     "files": [
       "main.js",
@@ -43,11 +59,36 @@
         {
           "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "ia32"
           ]
         },
         {
           "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "appx",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "squirrel",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
           "arch": [
             "x64"
           ]
@@ -58,8 +99,167 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
       "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico"
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Flum IPTV"
+    },
+    "msi": {
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "appx": {
+      "displayName": "Flum IPTV",
+      "applicationId": "FlumIPTV",
+      "identityName": "Naruh1010.FlumIPTV",
+      "publisher": "CN=Naruh1010",
+      "publisherDisplayName": "Naruh1010",
+      "backgroundColor": "#1a1a2e",
+      "languages": [
+        "es-ES",
+        "en-US",
+        "pt-BR"
+      ]
+    },
+    "squirrelWindows": {
+      "iconUrl": "https://raw.githubusercontent.com/Naruh1010/Flum-IPTV/main/build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "flatpak",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "pacman",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icons",
+      "category": "AudioVideo",
+      "maintainer": "Naruh1010 <calderonricardo2008@gmail.com>",
+      "vendor": "Flum",
+      "synopsis": "IPTV Player with HLS and DASH support",
+      "description": "IPTV Player with HLS and DASH support",
+      "desktop": {
+        "Name": "Flum IPTV",
+        "Comment": "IPTV Player with HLS and DASH support",
+        "Categories": "AudioVideo;Video;Player;"
+      }
+    },
+    "deb": {
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1"
+      ],
+      "category": "AudioVideo",
+      "priority": "optional",
+      "section": "video",
+      "maintainer": "Naruh1010 <calderonricardo2008@gmail.com>"
+    },
+    "rpm": {
+      "depends": [
+        "gtk3",
+        "libnotify",
+        "nss",
+        "libXScrnSaver",
+        "libXtst",
+        "xdg-utils",
+        "at-spi2-core",
+        "libuuid"
+      ],
+      "license": "MIT",
+      "vendor": "Flum",
+      "maintainer": "Naruh1010 <calderonricardo2008@gmail.com>"
+    },
+    "snap": {
+      "confinement": "strict",
+      "grade": "stable",
+      "plugs": [
+        "desktop",
+        "desktop-legacy",
+        "home",
+        "x11",
+        "wayland",
+        "unity7",
+        "browser-support",
+        "network",
+        "network-bind",
+        "pulseaudio",
+        "opengl"
+      ]
+    },
+    "flatpak": {
+      "runtime": "org.freedesktop.Platform",
+      "runtimeVersion": "23.08",
+      "sdk": "org.freedesktop.Sdk",
+      "base": "org.electronjs.Electron2.BaseApp",
+      "baseVersion": "23.08",
+      "finishArgs": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--socket=pulseaudio",
+        "--share=network",
+        "--device=dri",
+        "--filesystem=home",
+        "--talk-name=org.freedesktop.Notifications"
+      ]
+    },
+    "pacman": {
+      "depends": [
+        "gtk3",
+        "libnotify",
+        "nss",
+        "libxss",
+        "libxtst",
+        "xdg-utils",
+        "at-spi2-core",
+        "util-linux-libs"
+      ]
     }
   }
 }
