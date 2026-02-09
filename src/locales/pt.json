@@ -100,6 +100,7 @@
             "path": "Caminho do reprodutor",
             "select": "Selecionar",
             "detected": "Detectado automaticamente",
+            "selectDetected": "Selecione um reprodutor instalado",
             "detectedName": "{name} encontrado",
             "use": "Usar",
             "notConfigured": "Não configurado"

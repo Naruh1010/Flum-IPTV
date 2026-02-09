@@ -39,8 +39,7 @@ export class SettingsView {
         this.externalPlayerPath = document.getElementById('external-player-path');
         this.btnSelectPlayer = document.getElementById('btn-select-player');
         this.detectedPlayerContainer = document.getElementById('external-player-detected');
-        this.detectedPlayerName = document.getElementById('detected-player-name');
-        this.btnUseDetected = document.getElementById('btn-use-detected');
+        this.detectedPlayersSelect = document.getElementById('detected-players-select');
 
         // Recording
         this.recordingPresetSelect = document.getElementById('setting-recording-preset');
@@ -74,7 +73,7 @@ export class SettingsView {
             this.toggleExternalPlayer(e.target.checked);
         });
         this.btnSelectPlayer?.addEventListener('click', () => this.selectExternalPlayer());
-        this.btnUseDetected?.addEventListener('click', () => this.useDetectedPlayer());
+        this.detectedPlayersSelect?.addEventListener('change', (e) => this.onDetectedPlayerSelect(e.target.value));
 
         // Recording preset
         this.recordingPresetSelect?.addEventListener('change', (e) => {
@@ -285,9 +284,30 @@ export class SettingsView {
         try {
             this.detectedPlayers = await window.electronAPI.detectExternalPlayers();
 
-            if (this.detectedPlayers.length > 0 && this.detectedPlayerContainer) {
-                const firstPlayer = this.detectedPlayers[0];
-                this.detectedPlayerName.textContent = i18n.t('settings.externalPlayer.detectedName', { name: firstPlayer.name });
+            if (this.detectedPlayers.length > 0 && this.detectedPlayerContainer && this.detectedPlayersSelect) {
+                // Clear existing options
+                this.detectedPlayersSelect.innerHTML = '';
+
+                // Add a default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = `-- ${this.detectedPlayers.length} reproductor(es) encontrado(s) --`;
+                this.detectedPlayersSelect.appendChild(defaultOption);
+
+                // Add all detected players
+                for (const player of this.detectedPlayers) {
+                    const option = document.createElement('option');
+                    option.value = player.path;
+                    option.textContent = player.name;
+                    option.dataset.name = player.name;
+                    this.detectedPlayersSelect.appendChild(option);
+                }
+
+                // Select current player if configured
+                if (this.currentExternalPlayer?.path) {
+                    this.detectedPlayersSelect.value = this.currentExternalPlayer.path;
+                }
+
                 this.detectedPlayerContainer.style.display = this.useExternalPlayerToggle?.checked ? 'flex' : 'none';
             }
         } catch (error) {
@@ -310,9 +330,11 @@ export class SettingsView {
         }
     }
 
-    async useDetectedPlayer() {
-        if (this.detectedPlayers?.length > 0) {
-            const player = this.detectedPlayers[0];
+    async onDetectedPlayerSelect(playerPath) {
+        if (!playerPath) return;
+
+        const player = this.detectedPlayers.find(p => p.path === playerPath);
+        if (player) {
             this.currentExternalPlayer = player;
             this.externalPlayerPath.textContent = player.name;
             await window.electronAPI.setSetting('externalPlayer.path', player.path);

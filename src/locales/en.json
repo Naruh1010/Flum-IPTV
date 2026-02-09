@@ -99,6 +99,7 @@
             "path": "Player path",
             "select": "Select",
             "detected": "Automatically detected",
+            "selectDetected": "Select an installed player",
             "detectedName": "{name} found",
             "use": "Use",
             "notConfigured": "Not configured"

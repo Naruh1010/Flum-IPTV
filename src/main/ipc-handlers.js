@@ -263,6 +263,95 @@ function registerIpcHandlers(mainWindow) {
                 const color = systemPreferences.getAccentColor();
                 return `#${color.substring(0, 6)}`;
             }
+            // Linux accent color (GNOME/GTK)
+            else if (process.platform === 'linux') {
+                const { execSync } = require('child_process');
+
+                // First try getting the GTK theme (more reliable)
+                let gtkTheme = '';
+                try {
+                    gtkTheme = execSync('gsettings get org.gnome.desktop.interface gtk-theme', {
+                        encoding: 'utf-8',
+                        timeout: 1000,
+                        stdio: ['pipe', 'pipe', 'pipe']
+                    }).trim().replace(/'/g, '');
+                } catch (e) {
+                    // Ignore errors
+                }
+
+                // Linux Mint themes (Mint-Y-Dark-Red, Mint-Y-Aqua, etc.)
+                if (gtkTheme.toLowerCase().includes('mint-y')) {
+                    const mintColors = {
+                        'aqua': '#1f9eba',
+                        'blue': '#0c75de',
+                        'brown': '#aa876a',
+                        'grey': '#9d9d9d',
+                        'orange': '#ff7139',
+                        'pink': '#e54980',
+                        'purple': '#8c5dd9',
+                        'red': '#e82127',
+                        'sand': '#c5a07c',
+                        'teal': '#199ca8',
+                        'yellow': '#ffc62f'
+                    };
+
+                    // Extract color from theme name (e.g., "Mint-Y-Dark-Red" -> "red")
+                    const themeLower = gtkTheme.toLowerCase();
+                    for (const [colorName, hexColor] of Object.entries(mintColors)) {
+                        if (themeLower.includes(colorName)) {
+                            return hexColor;
+                        }
+                    }
+                    // Default Mint green if no color variant
+                    return '#87cf3e';
+                }
+
+                // Try GNOME 42+ accent color
+                try {
+                    const result = execSync('gsettings get org.gnome.desktop.interface accent-color', {
+                        encoding: 'utf-8',
+                        timeout: 1000,
+                        stdio: ['pipe', 'pipe', 'pipe']
+                    }).trim().replace(/'/g, '');
+
+                    // Map GNOME accent colors to hex
+                    const accentColors = {
+                        'blue': '#3584e4',
+                        'teal': '#2190a4',
+                        'green': '#3a944a',
+                        'yellow': '#c88800',
+                        'orange': '#ed5b00',
+                        'red': '#e62d42',
+                        'pink': '#d56199',
+                        'purple': '#9141ac',
+                        'slate': '#6f8396'
+                    };
+
+                    if (accentColors[result]) {
+                        return accentColors[result];
+                    }
+                } catch (e) {
+                    // GNOME accent not available
+                }
+
+                // Fallback: detect accent from other common themes
+                if (gtkTheme) {
+                    const themeLower = gtkTheme.toLowerCase();
+                    if (themeLower.includes('yaru')) {
+                        return '#E95420'; // Ubuntu orange
+                    } else if (themeLower.includes('breeze')) {
+                        return '#3daee9'; // KDE blue
+                    } else if (themeLower.includes('arc')) {
+                        return '#5294e2'; // Arc blue
+                    } else if (themeLower.includes('adwaita')) {
+                        return '#3584e4'; // GNOME blue
+                    } else if (themeLower.includes('pop')) {
+                        return '#48b9c7'; // Pop!_OS teal
+                    } else if (themeLower.includes('materia')) {
+                        return '#4285f4'; // Materia blue
+                    }
+                }
+            }
             return null;
         } catch (error) {
             console.error('[IPC] Error getting accent color:', error);
@@ -284,35 +373,115 @@ function registerIpcHandlers(mainWindow) {
 
     // ========== External Player Handlers ==========
 
-    // Common player paths on Windows
-    const commonPlayerPaths = [
-        {
-            name: 'MPV', paths: [
-                'C:\\Program Files\\mpv\\mpv.exe',
-                'C:\\Program Files (x86)\\mpv\\mpv.exe',
-                path.join(process.env.LOCALAPPDATA || '', 'Programs', 'mpv', 'mpv.exe'),
-                path.join(process.env.USERPROFILE || '', 'scoop', 'apps', 'mpv', 'current', 'mpv.exe')
-            ]
-        },
-        {
-            name: 'VLC', paths: [
-                'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe',
-                'C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe'
-            ]
-        },
-        {
-            name: 'PotPlayer', paths: [
-                'C:\\Program Files\\DAUM\\PotPlayer\\PotPlayerMini64.exe',
-                'C:\\Program Files (x86)\\DAUM\\PotPlayer\\PotPlayerMini.exe'
-            ]
-        },
-        {
-            name: 'MPC-HC', paths: [
-                'C:\\Program Files\\MPC-HC\\mpc-hc64.exe',
-                'C:\\Program Files (x86)\\MPC-HC\\mpc-hc.exe'
-            ]
+    // Common player paths based on OS
+    const getCommonPlayerPaths = () => {
+        if (process.platform === 'win32') {
+            // Windows paths
+            return [
+                {
+                    name: 'MPV', paths: [
+                        'C:\\Program Files\\mpv\\mpv.exe',
+                        'C:\\Program Files (x86)\\mpv\\mpv.exe',
+                        path.join(process.env.LOCALAPPDATA || '', 'Programs', 'mpv', 'mpv.exe'),
+                        path.join(process.env.USERPROFILE || '', 'scoop', 'apps', 'mpv', 'current', 'mpv.exe')
+                    ]
+                },
+                {
+                    name: 'VLC', paths: [
+                        'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe',
+                        'C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe'
+                    ]
+                },
+                {
+                    name: 'PotPlayer', paths: [
+                        'C:\\Program Files\\DAUM\\PotPlayer\\PotPlayerMini64.exe',
+                        'C:\\Program Files (x86)\\DAUM\\PotPlayer\\PotPlayerMini.exe'
+                    ]
+                },
+                {
+                    name: 'MPC-HC', paths: [
+                        'C:\\Program Files\\MPC-HC\\mpc-hc64.exe',
+                        'C:\\Program Files (x86)\\MPC-HC\\mpc-hc.exe'
+                    ]
+                }
+            ];
+        } else if (process.platform === 'linux') {
+            // Linux paths - check common binary locations
+            const home = process.env.HOME || '';
+            return [
+                {
+                    name: 'MPV', paths: [
+                        '/usr/bin/mpv',
+                        '/usr/local/bin/mpv',
+                        '/snap/bin/mpv',
+                        path.join(home, '.local/bin/mpv'),
+                        '/var/lib/flatpak/exports/bin/io.mpv.Mpv',
+                        path.join(home, '.local/share/flatpak/exports/bin/io.mpv.Mpv')
+                    ]
+                },
+                {
+                    name: 'VLC', paths: [
+                        '/usr/bin/vlc',
+                        '/usr/local/bin/vlc',
+                        '/snap/bin/vlc',
+                        '/var/lib/flatpak/exports/bin/org.videolan.VLC',
+                        path.join(home, '.local/share/flatpak/exports/bin/org.videolan.VLC')
+                    ]
+                },
+                {
+                    name: 'Celluloid', paths: [
+                        '/usr/bin/celluloid',
+                        '/usr/local/bin/celluloid',
+                        '/var/lib/flatpak/exports/bin/io.github.celluloid_player.Celluloid',
+                        path.join(home, '.local/share/flatpak/exports/bin/io.github.celluloid_player.Celluloid')
+                    ]
+                },
+                {
+                    name: 'SMPlayer', paths: [
+                        '/usr/bin/smplayer',
+                        '/usr/local/bin/smplayer'
+                    ]
+                },
+                {
+                    name: 'Totem', paths: [
+                        '/usr/bin/totem',
+                        '/usr/local/bin/totem'
+                    ]
+                },
+                {
+                    name: 'Haruna', paths: [
+                        '/usr/bin/haruna',
+                        '/var/lib/flatpak/exports/bin/org.kde.haruna',
+                        path.join(home, '.local/share/flatpak/exports/bin/org.kde.haruna')
+                    ]
+                }
+            ];
+        } else if (process.platform === 'darwin') {
+            // macOS paths
+            return [
+                {
+                    name: 'MPV', paths: [
+                        '/Applications/mpv.app/Contents/MacOS/mpv',
+                        '/usr/local/bin/mpv',
+                        '/opt/homebrew/bin/mpv'
+                    ]
+                },
+                {
+                    name: 'VLC', paths: [
+                        '/Applications/VLC.app/Contents/MacOS/VLC'
+                    ]
+                },
+                {
+                    name: 'IINA', paths: [
+                        '/Applications/IINA.app/Contents/MacOS/IINA'
+                    ]
+                }
+            ];
         }
-    ];
+        return [];
+    };
+
+    const commonPlayerPaths = getCommonPlayerPaths();
 
     // Detect installed players
     ipcMain.handle('player:detectExternal', async () => {
@@ -335,12 +504,23 @@ function registerIpcHandlers(mainWindow) {
 
     // Select external player via dialog
     ipcMain.handle('player:selectExternal', async () => {
-        const result = await dialog.showOpenDialog(mainWindow, {
-            title: 'Seleccionar Reproductor Externo',
-            filters: [
+        // Configure filters based on OS
+        let filters;
+        if (process.platform === 'win32') {
+            filters = [
                 { name: 'Ejecutables', extensions: ['exe'] },
                 { name: 'Todos los archivos', extensions: ['*'] }
-            ],
+            ];
+        } else {
+            // Linux/macOS - all files (executables don't have specific extension)
+            filters = [
+                { name: 'Todos los archivos', extensions: ['*'] }
+            ];
+        }
+
+        const result = await dialog.showOpenDialog(mainWindow, {
+            title: 'Seleccionar Reproductor Externo',
+            filters: filters,
             properties: ['openFile']
         });
 
@@ -349,7 +529,9 @@ function registerIpcHandlers(mainWindow) {
         }
 
         const playerPath = result.filePaths[0];
-        const playerName = path.basename(playerPath, '.exe');
+        // Get player name - remove .exe on Windows, just basename on others
+        const ext = process.platform === 'win32' ? '.exe' : '';
+        const playerName = path.basename(playerPath, ext);
 
         return {
             name: playerName,

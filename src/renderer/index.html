@@ -354,11 +354,11 @@
         <div class="setting-item" id="external-player-detected" style="display: none;">
           <div class="setting-info">
             <span class="setting-label" data-i18n="settings.externalPlayer.detected">Detectado automáticamente</span>
-            <span class="setting-description" id="detected-player-name">-</span>
+            <span class="setting-description" data-i18n="settings.externalPlayer.selectDetected">Selecciona un reproductor instalado</span>
           </div>
-          <button class="btn btn-secondary btn-sm" id="btn-use-detected">
-            <span data-i18n="settings.externalPlayer.use">Usar</span>
-          </button>
+          <select class="setting-select" id="detected-players-select">
+            <!-- Options will be added dynamically -->
+          </select>
         </div>
       </section>
 
