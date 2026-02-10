@@ -10,10 +10,12 @@ import { PlayerManager } from '../modules/player/player-manager.js';
 import { PlaylistManager } from '../modules/playlist/playlist-manager.js';
 import { StreamRecorder } from '../modules/player/stream-recorder.js';
 import { i18n } from './modules/i18n.js';
+import { keyboardShortcuts } from './modules/keyboard-shortcuts.js';
 import { PlayerUI } from './components/player-ui.js';
 import { ChannelList } from './components/channel-list.js';
 import { LibraryView } from './views/library-view.js';
 import { SettingsView } from './views/settings-view.js';
+import { qualitySelector } from './modules/quality-selector.js';
 
 class App {
     constructor() {
@@ -64,6 +66,9 @@ class App {
 
         // Initialize settings (theme and colors)
         await this.settingsView.initialize();
+
+        // Initialize keyboard shortcuts
+        await this.initializeKeyboardShortcuts();
 
         // Show library view
         this.showView('library');
@@ -129,8 +134,12 @@ class App {
         this.playerManager = new PlayerManager(this.elements.videoPlayer);
         this.playerManager.onStateChange = (state) => this.handlePlayerStateChange(state);
         this.playerManager.onError = (error) => this.handlePlayerError(error);
+        this.playerManager.onLevelsAvailable = () => qualitySelector.updateLevels();
 
         this.playlistManager = new PlaylistManager();
+
+        // Initialize quality selector
+        qualitySelector.initialize(this.playerManager);
 
         // Initialize stream recorder
         if (StreamRecorder.isSupported()) {
@@ -162,12 +171,34 @@ class App {
     }
 
     /**
+     * Initialize keyboard shortcuts with action callbacks
+     */
+    async initializeKeyboardShortcuts() {
+        await keyboardShortcuts.initialize({
+            playPause: () => this.playerManager.togglePlay(),
+            mute: () => this.playerManager.toggleMute(),
+            fullscreen: () => this.playerManager.toggleFullscreen(),
+            volumeUp: () => this.playerUI.adjustVolume(0.1),
+            volumeDown: () => this.playerUI.adjustVolume(-0.1),
+            prevChannel: () => {
+                const prev = this.playlistManager.getPreviousChannel();
+                if (prev) this.handleChannelSelected(prev);
+            },
+            nextChannel: () => {
+                const next = this.playlistManager.getNextChannel();
+                if (next) this.handleChannelSelected(next);
+            }
+        });
+    }
+
+    /**
      * Setup event listeners
      */
     setupEventListeners() {
         // Back to library
         this.elements.btnBackLibrary.addEventListener('click', () => {
             this.playerManager.stop();
+            qualitySelector.clear();
             this.hideError();
             this.showView('library');
         });
@@ -223,6 +254,7 @@ class App {
 
         // Reset player state completely
         this.playerManager.stop();
+        qualitySelector.clear();
         this.playlistManager.clear();
         this.channelList.clear();
         this.elements.currentChannelName.textContent = 'Flum IPTV';

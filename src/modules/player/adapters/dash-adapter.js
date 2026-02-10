@@ -11,6 +11,7 @@ export class DashAdapter {
         this.player = null;
         this.onStateChange = null;
         this.onError = null;
+        this.onLevelsAvailable = null;
     }
 
     /**
@@ -67,6 +68,11 @@ export class DashAdapter {
                 // Stream initialized
                 this.player.on(window.dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
                     console.log('[DashAdapter] Stream initialized');
+
+                    if (this.onLevelsAvailable) {
+                        this.onLevelsAvailable();
+                    }
+
                     resolve();
                 });
 

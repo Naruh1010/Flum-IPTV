@@ -48,6 +48,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectExternalPlayer: () => ipcRenderer.invoke('player:selectExternal'),
     openInExternalPlayer: (data) => ipcRenderer.invoke('player:openExternal', data),
 
+    // ========== Favorites ==========
+    toggleFavorite: (url) => ipcRenderer.invoke('favorites:toggle', url),
+    getFavorites: () => ipcRenderer.invoke('favorites:getAll'),
+    isFavorite: (url) => ipcRenderer.invoke('favorites:check', url),
+
     // ========== Recording ==========
     saveRecording: (data, filename) => ipcRenderer.invoke('recording:save', data, filename),
 

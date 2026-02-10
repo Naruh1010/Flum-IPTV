@@ -88,9 +88,6 @@ export class PlayerUI {
         this.elements.fullscreenBtn.addEventListener('click', () => {
             this.playerManager.toggleFullscreen();
         });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
     }
 
     /**
@@ -103,43 +100,6 @@ export class PlayerUI {
         this.video.addEventListener('waiting', () => this.showLoading(true));
         this.video.addEventListener('playing', () => this.showLoading(false));
         this.video.addEventListener('canplay', () => this.showLoading(false));
-    }
-
-    /**
-     * Handle keyboard shortcuts
-     */
-    handleKeyboard(e) {
-        // Ignore if typing in input
-        if (e.target.tagName === 'INPUT') return;
-
-        switch (e.key) {
-            case ' ':
-                e.preventDefault();
-                this.playerManager.togglePlay();
-                break;
-            case 'm':
-                this.playerManager.toggleMute();
-                break;
-            case 'f':
-                this.playerManager.toggleFullscreen();
-                break;
-            case 'ArrowUp':
-                e.preventDefault();
-                this.adjustVolume(0.1);
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                this.adjustVolume(-0.1);
-                break;
-            case 'ArrowLeft':
-                const prev = this.playlistManager.getPreviousChannel();
-                if (prev) this.playlistManager.selectChannel(prev);
-                break;
-            case 'ArrowRight':
-                const next = this.playlistManager.getNextChannel();
-                if (next) this.playlistManager.selectChannel(next);
-                break;
-        }
     }
 
     /**

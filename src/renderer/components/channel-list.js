@@ -2,8 +2,10 @@
  * ChannelList - Channel List Component
  * 
  * Renders and manages the channel list sidebar with
- * search, filtering, and selection functionality.
+ * search, filtering, favorites, and selection functionality.
  */
+
+import { i18n } from '../modules/i18n.js';
 
 export class ChannelList {
     constructor({ container, emptyState, searchInput, groupSelect, onChannelClick }) {
@@ -16,6 +18,7 @@ export class ChannelList {
         this.channels = [];
         this.groups = {};
         this.activeChannelId = null;
+        this.favorites = new Set();
 
         this.init();
     }
@@ -43,11 +46,27 @@ export class ChannelList {
     }
 
     /**
+     * Load favorites from storage
+     */
+    async loadFavorites() {
+        try {
+            const favs = await window.electronAPI.getFavorites();
+            this.favorites = new Set(favs);
+        } catch (error) {
+            console.error('[ChannelList] Error loading favorites:', error);
+            this.favorites = new Set();
+        }
+    }
+
+    /**
      * Render channel list and populate group filter
      */
     async render(channels, groups) {
         this.channels = channels;
         this.groups = groups;
+
+        // Load favorites before rendering
+        await this.loadFavorites();
 
         // Update group select options
         this.updateGroupSelect(Object.keys(groups));
@@ -102,6 +121,14 @@ export class ChannelList {
         // Clear existing options except first
         while (this.groupSelect.options.length > 1) {
             this.groupSelect.remove(1);
+        }
+
+        // Add favorites group if there are favorites
+        if (this.favorites.size > 0) {
+            const favOption = document.createElement('option');
+            favOption.value = '__favorites__';
+            favOption.textContent = i18n.t('player.favorites');
+            this.groupSelect.appendChild(favOption);
         }
 
         // Add group options
@@ -175,6 +202,10 @@ export class ChannelList {
 
         item.appendChild(info);
 
+        // Favorite button
+        const favBtn = this.createFavoriteButton(channel);
+        item.appendChild(favBtn);
+
         // Click handler
         item.addEventListener('click', () => {
             if (this.onChannelClick) {
@@ -183,6 +214,70 @@ export class ChannelList {
         });
 
         return item;
+    }
+
+    /**
+     * Create favorite toggle button
+     */
+    createFavoriteButton(channel) {
+        const btn = document.createElement('button');
+        btn.className = 'favorite-btn';
+        const isFav = this.favorites.has(channel.url);
+
+        if (isFav) {
+            btn.classList.add('active');
+        }
+
+        // Star SVG icon
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>`;
+
+        btn.title = isFav ? i18n.t('player.removeFavorite') : i18n.t('player.addFavorite');
+
+        // Click handler - stop propagation to prevent channel play
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            await this.toggleFavorite(channel, btn);
+        });
+
+        return btn;
+    }
+
+    /**
+     * Toggle favorite status for a channel
+     */
+    async toggleFavorite(channel, btn) {
+        try {
+            const result = await window.electronAPI.toggleFavorite(channel.url);
+            const isFav = result.isFavorite;
+
+            if (isFav) {
+                this.favorites.add(channel.url);
+                btn.classList.add('active');
+            } else {
+                this.favorites.delete(channel.url);
+                btn.classList.remove('active');
+            }
+
+            // Update star icon fill
+            const svg = btn.querySelector('svg');
+            if (svg) {
+                svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
+            }
+
+            btn.title = isFav ? i18n.t('player.removeFavorite') : i18n.t('player.addFavorite');
+
+            // Refresh group select to show/hide favorites group
+            this.updateGroupSelect(Object.keys(this.groups));
+
+            // If currently filtering by favorites, re-render
+            if (this.groupSelect.value === '__favorites__') {
+                this.filterChannels(this.searchInput.value, '__favorites__');
+            }
+        } catch (error) {
+            console.error('[ChannelList] Error toggling favorite:', error);
+        }
     }
 
     /**
@@ -201,8 +296,12 @@ export class ChannelList {
     filterChannels(query, group) {
         let filtered = this.channels;
 
+        // Filter by favorites
+        if (group === '__favorites__') {
+            filtered = filtered.filter(c => this.favorites.has(c.url));
+        }
         // Filter by group
-        if (group && group !== 'all') {
+        else if (group && group !== 'all') {
             filtered = filtered.filter(c => c.group === group);
         }
 

@@ -51,7 +51,11 @@
             "fullscreen": "Fullscreen",
             "exitFullscreen": "Exit fullscreen",
             "record": "Record",
-            "stopRecording": "Stop recording"
+            "stopRecording": "Stop recording",
+            "quality": "Quality"
+        },
+        "quality": {
+            "auto": "Auto"
         },
         "errors": {
             "loadFailed": "Could not play",
@@ -65,7 +69,10 @@
         },
         "externalPlayer": {
             "playing": "Channel is playing in an external window"
-        }
+        },
+        "favorites": "★ Favorites",
+        "addFavorite": "Add to favorites",
+        "removeFavorite": "Remove from favorites"
     },
     "settings": {
         "title": "Settings",
@@ -102,7 +109,8 @@
             "selectDetected": "Select an installed player",
             "detectedName": "{name} found",
             "use": "Use",
-            "notConfigured": "Not configured"
+            "notConfigured": "Not configured",
+            "detectedPlayers": "-- {count} player(s) found --"
         },
         "recording": {
             "title": "RECORDING",
@@ -118,6 +126,18 @@
             "title": "RESET",
             "restore": "Reset settings",
             "restoreDescription": "Restore default values"
+        },
+        "shortcuts": {
+            "title": "KEYBOARD SHORTCUTS",
+            "playPause": "Play / Pause",
+            "mute": "Mute / Unmute",
+            "fullscreen": "Fullscreen",
+            "volumeUp": "Volume up",
+            "volumeDown": "Volume down",
+            "prevChannel": "Previous channel",
+            "nextChannel": "Next channel",
+            "pressKey": "Press a key...",
+            "reset": "Reset shortcuts to default"
         }
     },
     "modal": {

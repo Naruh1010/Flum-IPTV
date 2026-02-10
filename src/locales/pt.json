@@ -52,7 +52,11 @@
             "fullscreen": "Tela cheia",
             "exitFullscreen": "Sair da tela cheia",
             "record": "Gravar",
-            "stopRecording": "Parar gravação"
+            "stopRecording": "Parar gravação",
+            "quality": "Qualidade"
+        },
+        "quality": {
+            "auto": "Automático"
         },
         "errors": {
             "loadFailed": "Não foi possível reproduzir",
@@ -66,7 +70,10 @@
         },
         "externalPlayer": {
             "playing": "O canal está sendo reproduzido em uma janela externa"
-        }
+        },
+        "favorites": "★ Favoritos",
+        "addFavorite": "Adicionar aos favoritos",
+        "removeFavorite": "Remover dos favoritos"
     },
     "settings": {
         "title": "Configurações",
@@ -103,7 +110,8 @@
             "selectDetected": "Selecione um reprodutor instalado",
             "detectedName": "{name} encontrado",
             "use": "Usar",
-            "notConfigured": "Não configurado"
+            "notConfigured": "Não configurado",
+            "detectedPlayers": "-- {count} reprodutor(es) encontrado(s) --"
         },
         "recording": {
             "title": "GRAVAÇÃO",
@@ -119,6 +127,18 @@
             "title": "REDEFINIR",
             "restore": "Redefinir configurações",
             "restoreDescription": "Voltar aos valores padrão"
+        },
+        "shortcuts": {
+            "title": "ATALHOS DE TECLADO",
+            "playPause": "Reproduzir / Pausar",
+            "mute": "Silenciar / Ativar som",
+            "fullscreen": "Tela cheia",
+            "volumeUp": "Aumentar volume",
+            "volumeDown": "Diminuir volume",
+            "prevChannel": "Canal anterior",
+            "nextChannel": "Próximo canal",
+            "pressKey": "Pressione uma tecla...",
+            "reset": "Restaurar atalhos padrão"
         }
     },
     "modal": {

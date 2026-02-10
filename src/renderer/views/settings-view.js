@@ -6,6 +6,7 @@
  */
 
 import { i18n } from '../modules/i18n.js';
+import { keyboardShortcuts } from '../modules/keyboard-shortcuts.js';
 
 export class SettingsView {
     constructor({ onBack, onRecordingPresetChange, onLanguageChange }) {
@@ -43,6 +44,10 @@ export class SettingsView {
 
         // Recording
         this.recordingPresetSelect = document.getElementById('setting-recording-preset');
+
+        // Shortcuts
+        this.shortcutsContainer = document.getElementById('shortcuts-container');
+        this.btnResetShortcuts = document.getElementById('btn-reset-shortcuts');
 
         // Reset
         this.btnResetSettings = document.getElementById('btn-reset-settings');
@@ -85,10 +90,15 @@ export class SettingsView {
         this.languageSelect?.addEventListener('change', (e) => {
             window.electronAPI.setSetting('ui.language', e.target.value);
             this.onLanguageChange?.(e.target.value);
+            this.renderShortcuts();
+            this.updateDetectedPlayersLabel();
         });
 
         // Reset
         this.btnResetSettings.addEventListener('click', () => this.resetSettings());
+
+        // Reset shortcuts
+        this.btnResetShortcuts?.addEventListener('click', () => this.resetShortcuts());
     }
 
     async loadSettings() {
@@ -134,6 +144,9 @@ export class SettingsView {
             if (this.recordingPresetSelect && settings.recording?.preset) {
                 this.recordingPresetSelect.value = settings.recording.preset;
             }
+
+            // Render keyboard shortcuts
+            this.renderShortcuts();
 
         } catch (error) {
             console.error('[SettingsView] Error loading settings:', error);
@@ -291,7 +304,7 @@ export class SettingsView {
                 // Add a default option
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
-                defaultOption.textContent = `-- ${this.detectedPlayers.length} reproductor(es) encontrado(s) --`;
+                defaultOption.textContent = i18n.t('settings.externalPlayer.detectedPlayers', { count: this.detectedPlayers.length });
                 this.detectedPlayersSelect.appendChild(defaultOption);
 
                 // Add all detected players
@@ -343,6 +356,18 @@ export class SettingsView {
         }
     }
 
+    /**
+     * Update detected players dropdown label (for language changes)
+     */
+    updateDetectedPlayersLabel() {
+        if (!this.detectedPlayersSelect || !this.detectedPlayers?.length) return;
+
+        const defaultOption = this.detectedPlayersSelect.querySelector('option[value=""]');
+        if (defaultOption) {
+            defaultOption.textContent = i18n.t('settings.externalPlayer.detectedPlayers', { count: this.detectedPlayers.length });
+        }
+    }
+
     show() {
         this.view.classList.add('active');
         this.loadSettings();
@@ -350,5 +375,111 @@ export class SettingsView {
 
     hide() {
         this.view.classList.remove('active');
+    }
+
+    // ========== Keyboard Shortcuts Methods ==========
+
+    /**
+     * Render shortcut items in settings
+     */
+    renderShortcuts() {
+        if (!this.shortcutsContainer) return;
+
+        const bindings = keyboardShortcuts.getBindings();
+        const actionLabels = {
+            playPause: i18n.t('settings.shortcuts.playPause'),
+            mute: i18n.t('settings.shortcuts.mute'),
+            fullscreen: i18n.t('settings.shortcuts.fullscreen'),
+            volumeUp: i18n.t('settings.shortcuts.volumeUp'),
+            volumeDown: i18n.t('settings.shortcuts.volumeDown'),
+            prevChannel: i18n.t('settings.shortcuts.prevChannel'),
+            nextChannel: i18n.t('settings.shortcuts.nextChannel')
+        };
+
+        this.shortcutsContainer.innerHTML = '';
+
+        for (const [action, key] of Object.entries(bindings)) {
+            const item = document.createElement('div');
+            item.className = 'setting-item';
+
+            const info = document.createElement('div');
+            info.className = 'setting-info';
+
+            const label = document.createElement('span');
+            label.className = 'setting-label';
+            label.textContent = actionLabels[action] || action;
+
+            info.appendChild(label);
+
+            const kbd = document.createElement('kbd');
+            kbd.className = 'shortcut-key';
+            kbd.textContent = keyboardShortcuts.constructor.getKeyDisplayName(key);
+            kbd.dataset.action = action;
+
+            kbd.addEventListener('click', () => this.startListening(kbd, action));
+
+            item.appendChild(info);
+            item.appendChild(kbd);
+            this.shortcutsContainer.appendChild(item);
+        }
+    }
+
+    /**
+     * Start listening for a new key binding
+     */
+    startListening(kbdElement, action) {
+        // Remove previous listener if any
+        this.stopListening();
+
+        this.listeningElement = kbdElement;
+        this.listeningAction = action;
+
+        kbdElement.classList.add('listening');
+        kbdElement.textContent = i18n.t('settings.shortcuts.pressKey');
+
+        // Disable shortcuts while rebinding
+        keyboardShortcuts.disable();
+
+        this._rebindHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Escape cancels
+            if (e.key === 'Escape') {
+                this.stopListening();
+                this.renderShortcuts();
+                return;
+            }
+
+            // Bind the new key
+            keyboardShortcuts.rebind(action, e.key);
+            this.stopListening();
+            this.renderShortcuts();
+        };
+
+        document.addEventListener('keydown', this._rebindHandler, { once: true });
+    }
+
+    /**
+     * Stop listening for key binding
+     */
+    stopListening() {
+        if (this.listeningElement) {
+            this.listeningElement.classList.remove('listening');
+            this.listeningElement = null;
+        }
+        if (this._rebindHandler) {
+            document.removeEventListener('keydown', this._rebindHandler);
+            this._rebindHandler = null;
+        }
+        keyboardShortcuts.enable();
+    }
+
+    /**
+     * Reset all shortcuts to defaults
+     */
+    async resetShortcuts() {
+        await keyboardShortcuts.resetToDefaults();
+        this.renderShortcuts();
     }
 }

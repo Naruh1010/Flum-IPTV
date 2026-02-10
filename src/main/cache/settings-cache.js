@@ -54,7 +54,8 @@ class SettingsCache {
                 preset: 'medium'
             },
             history: [],
-            recentPlaylists: []
+            recentPlaylists: [],
+            shortcuts: {}
         };
     }
 
@@ -90,7 +91,8 @@ class SettingsCache {
             externalPlayer: { ...defaults.externalPlayer, ...loaded.externalPlayer },
             recording: { ...defaults.recording, ...loaded.recording },
             history: loaded.history || defaults.history,
-            recentPlaylists: loaded.recentPlaylists || defaults.recentPlaylists
+            recentPlaylists: loaded.recentPlaylists || defaults.recentPlaylists,
+            shortcuts: { ...defaults.shortcuts, ...loaded.shortcuts }
         };
     }
 

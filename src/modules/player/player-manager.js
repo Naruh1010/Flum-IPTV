@@ -33,6 +33,8 @@ export class PlayerManager {
         this.onStateChange = null;
         this.onError = null;
         this.onTimeUpdate = null;
+        this.onQualityChanged = null;
+        this.onLevelsAvailable = null;
     }
 
     /**
@@ -142,6 +144,12 @@ export class PlayerManager {
                 this.onError(error);
             }
         };
+
+        this.currentAdapter.onLevelsAvailable = () => {
+            if (this.onLevelsAvailable) {
+                this.onLevelsAvailable();
+            }
+        };
     }
 
     /**
@@ -242,6 +250,46 @@ export class PlayerManager {
             muted: this.videoElement.muted,
             streamType: this.currentAdapter ? this.detectStreamType(this.currentUrl) : null
         };
+    }
+
+    /**
+     * Get available quality levels from current adapter
+     * @returns {Array} Quality levels with index, height, width, bitrate
+     */
+    getQualityLevels() {
+        if (!this.currentAdapter || typeof this.currentAdapter.getQualityLevels !== 'function') {
+            return [];
+        }
+        return this.currentAdapter.getQualityLevels();
+    }
+
+    /**
+     * Set quality level on current adapter
+     * @param {number} index - Quality level index (-1 for auto)
+     */
+    setQuality(index) {
+        if (!this.currentAdapter || typeof this.currentAdapter.setQuality !== 'function') return;
+        this.currentAdapter.setQuality(index);
+        if (this.onQualityChanged) {
+            this.onQualityChanged(index);
+        }
+    }
+
+    /**
+     * Get current quality level index
+     * @returns {number} Current quality index (-1 for auto)
+     */
+    getCurrentQuality() {
+        if (!this.currentAdapter) return -1;
+        // HLS adapter
+        if (this.currentAdapter.hls) {
+            return this.currentAdapter.hls.currentLevel;
+        }
+        // DASH adapter
+        if (this.currentAdapter.player) {
+            return this.currentAdapter.player.getQualityFor('video');
+        }
+        return -1;
     }
 
     /**

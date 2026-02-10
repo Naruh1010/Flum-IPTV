@@ -12,6 +12,7 @@ const { cacheManager } = require('./cache/cache-manager');
 const { iconCache } = require('./cache/icon-cache');
 const { settingsCache } = require('./cache/settings-cache');
 const { playlistStorage } = require('./cache/playlist-storage');
+const { favoritesManager } = require('./cache/favorites-manager');
 
 /**
  * Register all IPC handlers
@@ -20,6 +21,9 @@ const { playlistStorage } = require('./cache/playlist-storage');
 function registerIpcHandlers(mainWindow) {
     // Initialize playlist storage
     playlistStorage.initialize();
+
+    // Initialize favorites manager
+    favoritesManager.initialize();
 
     // ========== Playlist Handlers ==========
 
@@ -112,7 +116,10 @@ function registerIpcHandlers(mainWindow) {
 
     // Delete playlist
     ipcMain.handle('playlist:delete', async (event, id) => {
-        return playlistStorage.delete(id);
+        const result = playlistStorage.delete(id);
+        // Clear favorites tied to the deleted playlist's channels
+        favoritesManager.clearAll();
+        return result;
     });
 
     // Refresh playlist
@@ -251,6 +258,24 @@ function registerIpcHandlers(mainWindow) {
     ipcMain.handle('settings:reset', async () => {
         settingsCache.reset();
         return true;
+    });
+
+    // ========== Favorites Handlers ==========
+
+    // Toggle favorite status for a channel
+    ipcMain.handle('favorites:toggle', async (event, url) => {
+        const isFavorite = favoritesManager.toggleFavorite(url);
+        return { isFavorite };
+    });
+
+    // Get all favorite URLs
+    ipcMain.handle('favorites:getAll', async () => {
+        return favoritesManager.getAll();
+    });
+
+    // Check if a channel is favorite
+    ipcMain.handle('favorites:check', async (event, url) => {
+        return favoritesManager.isFavorite(url);
     });
 
     // ========== System Handlers ==========

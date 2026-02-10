@@ -11,6 +11,7 @@ export class HlsAdapter {
         this.hls = null;
         this.onStateChange = null;
         this.onError = null;
+        this.onLevelsAvailable = null;
     }
 
     /**
@@ -100,6 +101,11 @@ export class HlsAdapter {
             // Manifest loaded successfully
             this.hls.on(window.Hls.Events.MANIFEST_PARSED, (event, data) => {
                 console.log(`[HlsAdapter] Manifest parsed, ${data.levels.length} quality levels`);
+
+                if (this.onLevelsAvailable) {
+                    this.onLevelsAvailable();
+                }
+
                 if (!resolved) {
                     resolved = true;
                     // Auto play

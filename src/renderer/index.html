@@ -146,7 +146,8 @@
 
         <div class="player-controls" id="player-controls">
           <div class="controls-left">
-            <button class="control-btn" id="btn-play" data-i18n-title="player.controls.playPause" title="Reproducir/Pausar">
+            <button class="control-btn" id="btn-play" data-i18n-title="player.controls.playPause"
+              title="Reproducir/Pausar">
               <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
@@ -192,7 +193,19 @@
             </div>
           </div>
           <div class="controls-right">
-            <button class="control-btn" id="btn-record" data-i18n-title="player.controls.record" title="Grabar" disabled>
+            <div class="quality-control">
+              <div class="quality-popup" id="quality-popup"></div>
+              <button class="control-btn hidden" id="btn-quality" data-i18n-title="player.controls.quality"
+                title="Calidad">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </button>
+            </div>
+            <button class="control-btn" id="btn-record" data-i18n-title="player.controls.record" title="Grabar"
+              disabled>
               <svg class="icon-record" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="12" cy="12" r="8" />
               </svg>
@@ -200,7 +213,8 @@
                 <rect x="6" y="6" width="12" height="12" rx="2" />
               </svg>
             </button>
-            <button class="control-btn" id="btn-fullscreen" data-i18n-title="player.controls.fullscreen" title="Pantalla completa">
+            <button class="control-btn" id="btn-fullscreen" data-i18n-title="player.controls.fullscreen"
+              title="Pantalla completa">
               <svg class="icon-fullscreen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <polyline points="15 3 21 3 21 9" />
@@ -354,11 +368,31 @@
         <div class="setting-item" id="external-player-detected" style="display: none;">
           <div class="setting-info">
             <span class="setting-label" data-i18n="settings.externalPlayer.detected">Detectado automáticamente</span>
-            <span class="setting-description" data-i18n="settings.externalPlayer.selectDetected">Selecciona un reproductor instalado</span>
+            <span class="setting-description" data-i18n="settings.externalPlayer.selectDetected">Selecciona un
+              reproductor instalado</span>
           </div>
           <select class="setting-select" id="detected-players-select">
             <!-- Options will be added dynamically -->
           </select>
+        </div>
+      </section>
+
+      <!-- Keyboard Shortcuts Section -->
+      <section class="settings-section">
+        <h2 class="section-title" data-i18n="settings.shortcuts.title">Atajos de Teclado</h2>
+
+        <div id="shortcuts-container">
+          <!-- Shortcut items generated dynamically by settings-view.js -->
+        </div>
+
+        <div class="setting-item clickable" id="btn-reset-shortcuts">
+          <div class="setting-info">
+            <span class="setting-label" data-i18n="settings.shortcuts.reset">Restaurar atajos por defecto</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+          </svg>
         </div>
       </section>
 
