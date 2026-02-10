@@ -42,6 +42,8 @@
 - 🔊 Volume control with slider
 - 🖥️ Fullscreen mode
 - 🎛️ Auto-hiding controls
+- 📊 **Quality selection** - Switch between available resolutions (Auto, 1080p, 720p, etc.)
+- ⭐ **Favorites** - Mark channels as favorites for quick access
 
 ### Recording
 - ⏺️ Record live streams to **WebM** (VP8 + Opus)
@@ -56,6 +58,7 @@
 - 🎨 Customizable accent color or synced with system
 - 🌐 Multi-language support (ES/EN/PT)
 - 💾 Channel icon caching for fast loading
+- ⌨️ **Customizable keyboard shortcuts** - Rebind controls to your preference
 
 ### External Player Integration
 - 🔗 Open streams in **VLC**, **MPV**, or other players
@@ -114,6 +117,8 @@ npm start
    - 🔊 Adjust volume
    - ⏺️ Start recording
    - 🖥️ Fullscreen
+   - ⚙️ Quality selection (when multiple levels are available)
+   - ⭐ Toggle favorite
 
 ### Recording a Stream
 
@@ -153,6 +158,12 @@ Access settings from the ⚙️ icon in the top right corner.
 |--------|-------------|
 | **Recording quality** | Low (500kbps), Medium (1.5Mbps), High (3Mbps) |
 | **Output format** | WebM (VP8 + Opus) at 30 fps max |
+
+### Keyboard Shortcuts
+| Option | Description |
+|--------|-------------|
+| **Rebindable shortcuts** | Click a key to reassign Play/Pause, Mute, Fullscreen, Volume, and Channel navigation |
+| **Reset shortcuts** | Restore default key bindings |
 
 ### Reset
 | Option | Description |
