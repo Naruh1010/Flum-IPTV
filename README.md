@@ -77,8 +77,8 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/flum-iptv.git
-cd flum-iptv
+git clone https://github.com/Naruh1010/Flum-IPTV.git
+cd Flum-IPTV
 ```
 
 2. **Install dependencies**
